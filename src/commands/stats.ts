@@ -28,7 +28,7 @@ module.exports = {
 						value: codeBlock(
 							`Uptime: ${formatTime(Math.floor(i.client.uptime / 1000))}\n` +
 								`Status: ${Status[i.client.ws.status]}\n` +
-								`Ping: ${i.client.ws.ping}ms` +
+								`Ping: ${i.client.ws.ping}ms\n` +
 								`Shards: ${i.client.ws.shards.size}\n`
 						),
 					},
