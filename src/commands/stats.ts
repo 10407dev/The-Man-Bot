@@ -1,8 +1,8 @@
-import { SlashCommandBuilder, CommandInteraction, EmbedBuilder, codeBlock, Status } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, codeBlock, Status } from "discord.js";
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("stats").setDescription("Sends bot statistics").setDMPermission(true),
-	execute: async (i: CommandInteraction) => {
+	execute: async (i: ChatInputCommandInteraction) => {
 		const formatTime = (seconds: number) => {
 			let time = "";
 			const days = Math.floor(seconds / 86400);
