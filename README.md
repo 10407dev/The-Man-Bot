@@ -14,5 +14,5 @@ CLIENT_ID=CLIENTIDHERE
 TESTING_GUILD_ID=TESTINGGUILDIDHERE
 # TESTING_GUILD_ID is required for dev commands to be deployed
 ```
-- Run `npm run deploy` to deploy commands (once per added/removed command)
+- Run `npm run deploy` to deploy commands
 - Run `npm start`
