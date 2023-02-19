@@ -35,7 +35,7 @@ if (TESTING_GUILD_ID !== undefined) {
 // Registering all commands
 const rest = new REST({ version: "10" }).setToken(TOKEN);
 (async () => {
-	if (TESTING_GUILD_ID !== undefined) await rest.put(Routes.applicationGuildCommands(CLIENT_ID, TESTING_GUILD_ID), { body: devCommands });
+	if (TESTING_GUILD_ID !== undefined) await rest.put(Routes.applicationGuildCommands(CLIENT_ID, TESTING_GUILD_ID), { body: commands.concat(devCommands) });
 	await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
 	console.log(`Successfully updated ${commands.length} global and ${devCommands.length} dev application commands`);
 })();

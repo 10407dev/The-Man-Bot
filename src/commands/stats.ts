@@ -3,7 +3,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, codeBlo
 module.exports = {
 	data: new SlashCommandBuilder().setName("stats").setDescription("Sends bot statistics").setDMPermission(true),
 	execute: async (i: ChatInputCommandInteraction) => {
-		const formatTime = (seconds: number) => {
+		function formatTime(seconds: number) {
 			let time = "";
 			const days = Math.floor(seconds / 86400);
 			const hours = Math.floor(seconds / 3600) % 24;
@@ -13,7 +13,7 @@ module.exports = {
 			if (minutes > 0) time += minutes === 1 ? "1 minute" : `${minutes} minutes`;
 			else time += seconds === 1 ? "1 second" : `${seconds} seconds`;
 			return time;
-		};
+		}
 
 		await i.reply({
 			ephemeral: true,
@@ -28,8 +28,7 @@ module.exports = {
 						value: codeBlock(
 							`Uptime: ${formatTime(Math.floor(i.client.uptime / 1000))}\n` +
 								`Status: ${Status[i.client.ws.status]}\n` +
-								`Ping: ${i.client.ws.ping}ms\n` +
-								`Shards: ${i.client.ws.shards.size}\n`
+								`Ping: ${i.client.ws.ping}ms\n`
 						),
 					},
 				]),
