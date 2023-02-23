@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 
-module.exports = {
+export const command = {
 	data: new SlashCommandBuilder()
 		.setName("eval")
 		.setDescription("Executes given code and returns it's output")

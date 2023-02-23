@@ -3,39 +3,39 @@ import fs from "node:fs";
 import path from "node:path";
 import dotenv from "dotenv";
 
-// Initializing environment variables
+// Initializing variables
 dotenv.config();
-const TESTING_GUILD_ID = process.env.TESTING_GUILD_ID;
-const TOKEN = process.env.TOKEN;
-const CLIENT_ID = process.env.CLIENT_ID;
-if (TOKEN === undefined || CLIENT_ID === undefined) throw new Error("TOKEN or CLIENT_ID was not found in env vars or .env");
+const { TOKEN, CLIENT_ID, TESTING_GUILD_ID, NODE_ENV } = process.env;
+if (TOKEN === undefined) throw new Error("Missing TOKEN");
+if (CLIENT_ID === undefined) throw new Error("Missing CLIENT_ID");
+const rest = new REST({ version: "10" }).setToken(TOKEN);
 
-// Reading global commands
 const commands = [];
-const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
-for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	commands.push(command.data.toJSON());
+if (NODE_ENV === "prod") {
+	const commandsPath = path.join(__dirname, "commands");
+	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		commands.push(command.data.toJSON());
+	}
+
+	(async () => await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands }))().then(() =>
+		console.log(`Successfully updated ${commands.length} global application command${commands.length === 1 ? "" : "s"}`)
+	);
 }
 
-// Reading dev commands
 const devCommands = [];
-if (TESTING_GUILD_ID !== undefined) {
-	const devCommandsPath = path.join(commandsPath, "dev");
+if (TESTING_GUILD_ID) {
+	const devCommandsPath = path.join(__dirname, "commands", "dev");
 	const devCommandFiles = fs.readdirSync(devCommandsPath).filter((file) => file.endsWith(".js"));
 	for (const file of devCommandFiles) {
 		const filePath = path.join(devCommandsPath, file);
 		const command = require(filePath);
 		devCommands.push(command.data.toJSON());
 	}
-}
 
-// Registering all commands
-const rest = new REST({ version: "10" }).setToken(TOKEN);
-(async () => {
-	if (TESTING_GUILD_ID !== undefined) await rest.put(Routes.applicationGuildCommands(CLIENT_ID, TESTING_GUILD_ID), { body: commands.concat(devCommands) });
-	await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
-	console.log(`Successfully updated ${commands.length} global and ${devCommands.length} dev application commands`);
-})();
+	(async () => await rest.put(Routes.applicationGuildCommands(CLIENT_ID, TESTING_GUILD_ID), { body: devCommands.concat(commands) }))().then(() =>
+		console.log(`Successfully updated ${devCommands.length} dev local command${devCommands.length === 1 ? "" : "s"}`)
+	);
+}

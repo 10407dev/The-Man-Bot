@@ -9,12 +9,11 @@
 ## Starting
 - Create a file named `.env` and fill it like so:
 ```
-TOKEN=TOKENHERE
-CLIENT_ID=CLIENTIDHERE
-MAIN_GUILD_ID=MAINGUILDIDHERE
-INFO_CHANNEL_ID=INFOCHANNELIDHERE
-TESTING_GUILD_ID=TESTINGGUILDIDHERE
-# TESTING_GUILD_ID is required for dev commands to be deployed
+TOKEN=TOKENHERE # Your bot token
+CLIENT_ID=CLIENTIDHERE # Your bot client id (same as application id)
+TESTING_GUILD_ID=TESTINGGUILDIDHERE # Your testing guild (server) id, for dev commands
+NODE_ENV=prod # "prod" if you want to deploy global commands, or anything else if you don't
 ```
 - Run `npm run deploy` to deploy commands
-- Run `npm start`
+- Run `npm run database -- --fork` to host a database
+- Run `npm start` to start a bot
