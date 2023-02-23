@@ -16,7 +16,7 @@ if (NODE_ENV === "prod") {
 	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
+		const command = require(filePath).command;
 		commands.push(command.data.toJSON());
 	}
 
@@ -31,7 +31,7 @@ if (TESTING_GUILD_ID) {
 	const devCommandFiles = fs.readdirSync(devCommandsPath).filter((file) => file.endsWith(".js"));
 	for (const file of devCommandFiles) {
 		const filePath = path.join(devCommandsPath, file);
-		const command = require(filePath);
+		const command = require(filePath).command;
 		devCommands.push(command.data.toJSON());
 	}
 

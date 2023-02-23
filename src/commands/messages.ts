@@ -11,6 +11,8 @@ import {
 	StringSelectMenuOptionBuilder,
 	MessageComponentInteraction,
 	Collection,
+	StageChannel,
+	ChannelType,
 } from "discord.js";
 import mongoose from "mongoose";
 import { mongoURI } from "../database";
@@ -64,6 +66,7 @@ export const command = {
 		const channel = (await i.guild!.channels.fetch()).find((c) => c!.name === choice);
 		if (!channel) throw new Error("Chosen channel does not exist");
 		if (!channel.isTextBased()) throw new Error("Chosen channel is not text-based");
+		if (channel.type === ChannelType.GuildStageVoice) throw new Error("Stage channels are currently unsupported")
 
 		const message = messages.get(choice);
 		if (!message) throw new Error("Chosen message does not exist");
