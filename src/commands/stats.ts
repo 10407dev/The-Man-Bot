@@ -28,7 +28,7 @@ export const command = {
 			},
 		]);
 
-		await i.reply({
+		i.reply({
 			ephemeral: true,
 			embeds: [embed],
 		});

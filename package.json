@@ -2,19 +2,20 @@
   "name": "the-man-bot",
   "author": "dev147",
   "license": "GPLv2",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "main": "./build/index.js",
   "scripts": {
     "preversion": "git add -A",
     "build": "rm -rf ./build && tsc",
     "deploy": "node ./build/deploy.js",
     "start": "node ./build/index.js",
-    "database": "killall mongod ; mongod --dbpath ./db/ --logpath ./logs/db.log"
+    "database": "killall mongod ; mongod --dbpath ./db/ --logpath ./logs/database.log"
   },
   "dependencies": {
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "mongoose": "^6.9.2",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "winston": "^3.8.2"
   }
 }

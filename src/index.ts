@@ -1,15 +1,40 @@
-import { ActivityType, Client, Collection, GatewayIntentBits, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { ActivityType, Client, Collection, GatewayIntentBits, ChatInputCommandInteraction, SlashCommandBuilder, AutocompleteInteraction } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
+import { createLogger, format, transports } from "winston";
 import dotenv from "dotenv";
 
-// Initializing variables
 dotenv.config();
-const { TOKEN } = process.env;
+const { NODE_ENV, TOKEN } = process.env;
 if (!TOKEN) throw new Error("Missing TOKEN");
 
+// Creating a logger
+export const logger = createLogger({
+	levels: {
+		error: 0,
+		warn: 1,
+		info: 2,
+		debug: 3,
+	},
+	level: "info",
+	format: format.combine(format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), format.errors({ stack: true }), format.json()),
+	transports: [new transports.File({ filename: "./logs/botAll.log" }), new transports.File({ level: "debug", filename: "./logs/botDebug.log" })],
+	exceptionHandlers: [new transports.File({ filename: "./logs/botExceptions.log" })],
+});
+
+if (NODE_ENV !== "production") {
+	logger.add(
+		new transports.Console({
+			format: format.combine(format.colorize(), format.simple()),
+		})
+	);
+}
+
 export class ClientWithCommands extends Client {
-	commands: Collection<String, { data: SlashCommandBuilder; execute: (i: ChatInputCommandInteraction) => void }> = new Collection();
+	commands: Collection<
+		String,
+		{ data: SlashCommandBuilder; execute: (i: ChatInputCommandInteraction) => any; autocomplete?: (i: AutocompleteInteraction) => any }
+	> = new Collection();
 }
 
 const client = new ClientWithCommands({
@@ -24,20 +49,7 @@ for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
 	const command = require(filePath).command;
 	try {
-		client.commands.set(command.data.name, { data: command.data, execute: command.execute });
-	} catch {
-		console.log(`Skipped incomplete command in ${filePath}`);
-	}
-}
-
-// Initializing dev commands
-const devCommandsPath = path.join(commandsPath, "dev");
-const devCommandFiles = fs.readdirSync(devCommandsPath).filter((file) => file.endsWith(".js"));
-for (const file of devCommandFiles) {
-	const filePath = path.join(devCommandsPath, file);
-	const command = require(filePath).command;
-	try {
-		client.commands.set(command.data.name, { data: command.data, execute: command.execute });
+		client.commands.set(command.data.name, command);
 	} catch {
 		throw new Error(`Incomplete command in ${filePath}`);
 	}
@@ -57,4 +69,4 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(process.env.TOKEN);
+client.login(TOKEN);

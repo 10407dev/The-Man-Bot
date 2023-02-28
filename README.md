@@ -12,7 +12,7 @@
 TOKEN=TOKENHERE # Your bot token
 CLIENT_ID=CLIENTIDHERE # Your bot client id (same as application id)
 TESTING_GUILD_ID=TESTINGGUILDIDHERE # Your testing guild (server) id, for dev commands
-NODE_ENV=prod # "prod" if you want to deploy global commands, or anything else if you don't
+NODE_ENV=production # "production" if you want to deploy global commands, or anything else if you don't
 ```
 - Run `npm run deploy` to deploy commands
 - Run `npm run database -- --fork` to host a database
