@@ -2,7 +2,7 @@
   "name": "the-man-bot",
   "author": "dev147",
   "license": "GPLv2",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "./build/index.js",
   "scripts": {
     "preversion": "git add -A",

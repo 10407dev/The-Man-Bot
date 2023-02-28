@@ -48,8 +48,6 @@ export const command = {
 		const message = (await import(`../messages/${choice}`)).default;
 		if (!message) throw new Error("Chosen message does not exist");
 
-		logger.debug(message)
-
 		const channel = (await i.guild!.channels.fetch()).find((c) => c!.name === choice) ?? i.channel;
 		if (!channel) throw new Error("Chosen channel does not exist");
 		if (!channel.isTextBased()) throw new Error("Chosen channel is not text-based");
